@@ -145,9 +145,24 @@
 
 <div class="container">
     <form action="" method="post" enctype="multipart/form-data">
-    
-        <!-- ocultamos el id del empleado -->
-        <input type="hidden" 
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Empleado</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+        <!-- campos del formulario -->
+         <!-- ocultamos el id del empleado -->
+         <input type="hidden" 
         name="txtID" 
         placeholder="" 
         id="txtID" 
@@ -161,6 +176,7 @@
         placeholder="" 
         id="txtNombre" 
         required
+        class="form-control"
         value='<?php echo $txtNombre; ?>'>
         <br>
 
@@ -170,6 +186,7 @@
         placeholder="" 
         id="txtApellidoP" 
         required
+        class="form-control"
         value='<?php echo $txtApellidoP; ?>'>
         <br>
 
@@ -179,6 +196,7 @@
         placeholder="" 
         id="txtApellidoM" 
         required
+        class="form-control"
         value='<?php echo $txtApellidoM; ?>'>
         <br>
 
@@ -188,6 +206,7 @@
         placeholder="" 
         id="txtCorreo" 
         required
+        class="form-control"
         value='<?php echo $txtCorreo; ?>'>
         <br>  
 
@@ -197,13 +216,29 @@
         name="txtFoto" 
         placeholder="" 
         id="txtFoto" 
+        class="form-control"
         require
         value='<?php echo $txtFoto; ?>'>
         <br>
-        <button value="btnAgregar" type="submit" name="accion">Agregar</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+      <button value="btnAgregar" type="submit" name="accion">Agregar</button>
         <button value="btnModificar" type="submit" name="accion">Modificar</button>
         <button value="btnEliminar" type="submit" name="accion">Eliminar</button>
         <button value="btnCancelar" type="submit" name="accion">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+ Agregar empleado +
+</button>
+    
+       
+     
     </form>
 
     <table class="table table-dark">
