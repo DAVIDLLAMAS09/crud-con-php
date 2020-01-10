@@ -65,8 +65,21 @@
             $nombreArchivo = ($txtFoto!="")?$Fecha->getTimestamp()."_".$_FILES["txtFoto"]["name"]:"default.png";
             
             $tmpFoto = $_FILES["txtFoto"]["tmp_name"];
-
+            // si hay una foto seleccionada la modifica,pero antes tenemos que
+            // borrar la anterior foto de nuestra carpeta Imagenes
             if ($tmpFoto!="") {
+                // borrar foto antigua en dado caso que se modifique
+                $sentencia = $conn -> prepare("SELECT Foto FROM empleados WHERE id=:id"); 
+                $sentencia->bindParam(':id', $txtID);
+                $sentencia->execute();
+                $empleado=$sentencia->fetch(PDO::FETCH_LAZY);
+               
+                if (isset($empleado["Foto"])) {
+                    if (file_exists("../Imagenes/".$empleado["Foto"])) {
+                        unlink("../Imagenes/".$empleado["Foto"]);
+                    }
+                }
+                // y luego subimos la nueva foto
                move_uploaded_file($tmpFoto,"../Imagenes/".$nombreArchivo);
                $sentencia = $conn -> prepare("UPDATE empleados SET 
         
@@ -110,7 +123,7 @@
         
         
     }
-
+ 
     $sentencia = $conn->prepare("SELECT * FROM empleados ");
     $sentencia->execute();
     $listaEmpleados = $sentencia->fetchALL(PDO::FETCH_ASSOC);
@@ -133,12 +146,12 @@
 <div class="container">
     <form action="" method="post" enctype="multipart/form-data">
     
-        <label for="">ID:</label>
-        <input type="text" 
+        <!-- ocultamos el id del empleado -->
+        <input type="hidden" 
         name="txtID" 
         placeholder="" 
         id="txtID" 
-        required
+       
         value='<?php echo $txtID; ?>'>
         <br>
 
@@ -176,7 +189,7 @@
         id="txtCorreo" 
         required
         value='<?php echo $txtCorreo; ?>'>
-        <br>
+        <br>  
 
         <label for="">FOTO:</label>
         <input type="file"
