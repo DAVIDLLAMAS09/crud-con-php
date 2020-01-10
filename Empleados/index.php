@@ -11,6 +11,11 @@
     // botones que tienen accion editar,agregar,modificar,eliminar
     $accion = (isset($_POST["accion"]))?$_POST["accion"]:"";
 
+    // desactivamos botones (menos Agregar) al apretar el boton agregar empleado
+    $accionAgregar ="";
+    $accionModificar=$accionEliminar=$accionCancelar="disabled";
+    $mostrarModal=false;
+
     include("../conexion/conexion.php");
     // evaluamos con un switch lo que presiono el usuario
 
@@ -76,7 +81,9 @@
                
                 if (isset($empleado["Foto"])) {
                     if (file_exists("../Imagenes/".$empleado["Foto"])) {
+                       if ($item['Foto']!='default.jpg') {
                         unlink("../Imagenes/".$empleado["Foto"]);
+                       }
                     }
                 }
                 // y luego subimos la nueva foto
@@ -100,7 +107,7 @@
             $sentencia->execute();
             $empleado=$sentencia->fetch(PDO::FETCH_LAZY);
            
-            if (isset($empleado["Foto"])) {
+            if (isset($empleado["Foto"]) && ($item['Foto']!='default.jpg')) {
                 if (file_exists("../Imagenes/".$empleado["Foto"])) {
                     unlink("../Imagenes/".$empleado["Foto"]);
                 }
@@ -118,7 +125,15 @@
             break;
 
         case 'btnCancelar':
-           
+            header('Location: index.php');
+            break;
+
+            // cuando apretamos el boton de seleccionar en la tabla
+        case 'seleccionar':
+            // desactivamos el boton de agregar y activamos los demas botones
+            $accionAgregar ="disabled";
+            $accionModificar=$accionEliminar=$accionCancelar="";
+            $mostrarModal=true;
             break;
         
         
@@ -223,10 +238,10 @@
         </div>
       </div>
       <div class="modal-footer">
-      <button value="btnAgregar" type="submit" name="accion">Agregar</button>
-        <button value="btnModificar" type="submit" name="accion">Modificar</button>
-        <button value="btnEliminar" type="submit" name="accion">Eliminar</button>
-        <button value="btnCancelar" type="submit" name="accion">Cancelar</button>
+      <button value="btnAgregar" <?php echo $accionAgregar ?> type="submit" name="accion">Agregar</button>
+        <button value="btnModificar" <?php echo $accionModificar ?> type="submit" name="accion">Modificar</button>
+        <button value="btnEliminar" <?php echo $accionEliminar ?> type="submit" name="accion">Eliminar</button>
+        <button value="btnCancelar" <?php echo $accionCancelar ?> type="submit" name="accion">Cancelar</button>
       </div>
     </div>
   </div>
@@ -280,6 +295,10 @@
 <?php } ?>
   </tbody>
 </table>
+
+<!-- mostrar modal cuando se presione seleccionar -->
+
+
 </div>
 
 
@@ -288,5 +307,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
+<?php if($mostrarModal) { ?>
+    <script>
+        $('#exampleModal').modal('show');
+    </script>
+ 
+<?php }?>
 </body>
 </html>
